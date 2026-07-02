@@ -425,6 +425,22 @@
   .report-status.sending{background:#eef4fe;color:var(--bea-blue-deep);}
   .report-status.sent{background:#eaf7ea;color:#2e6b2f;}
   .report-status.failed{background:#fff8e6;color:#9a6b00;}
+
+  /* ===== ANONYMOUS FEEDBACK ===== */
+  .feedback-card{
+    background:var(--bea-white);border:1px solid #EEF0F3;box-shadow:var(--shadow-sm);
+    border-radius:20px;padding:22px 24px;margin-top:8px;
+  }
+  .feedback-card p{font-size:14px;color:#6b7280;line-height:1.55;margin:0 0 4px;}
+  .stars{display:flex;gap:8px;margin:18px 0 20px;}
+  .star-btn{
+    font-size:30px;background:none;border:none;cursor:pointer;line-height:1;padding:0;
+    filter:grayscale(1);opacity:.4;transition:transform .1s, opacity .1s, filter .1s;
+  }
+  .star-btn:hover{transform:scale(1.12);}
+  .star-btn.active{filter:none;opacity:1;}
+  .feedback-thanks{text-align:center;padding:20px 10px;}
+  .feedback-thanks .emoji{font-size:38px;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -947,6 +963,9 @@ let answers = new Array(quiz.length).fill(null);
 let questionRevealed = new Array(quiz.length).fill(false);
 let orderState = null;
 let reportSaveStatus = "idle"; // "idle" | "saving" | "saved" | "failed"
+let feedbackRating = 0;
+let feedbackText = "";
+let feedbackStatus = "idle"; // "idle" | "sending" | "sent" | "failed"
 
 const main = document.getElementById("main");
 const appRoot = document.getElementById("appRoot");
@@ -959,8 +978,8 @@ function renderGateView(){
   main.innerHTML = `
     <div class="gate-card">
       <div class="logo-badge-big">🎓</div>
-      <h1>Онбординг викладача BEA</h1>
-      <p>Перш ніж почати, вкажіть, будь ласка, ім'я та email — це потрібно, щоб зберегти результат вашого тесту.</p>
+      <h1>Вітаємо в BEA! 👋</h1>
+      <p>Щоб розпочати онбординг, будь ласка, увійдіть — вкажіть своє ім'я та email.</p>
       <div class="gate-field">
         <label>Ім'я та прізвище</label>
         <input type="text" id="gateName" placeholder="Напр. Олена Ковальчук" value="${userName}">
@@ -971,7 +990,6 @@ function renderGateView(){
       </div>
       <div class="gate-error" id="gateError"></div>
       <button class="btn btn-primary" style="width:100%;" onclick="submitGate()">Продовжити →</button>
-      <p class="gate-note">Дані використовуються лише для того, щоб менеджер міг переглянути ваш результат.</p>
     </div>
   `;
   document.getElementById("gateName").focus();
@@ -1060,9 +1078,9 @@ function renderWelcomeView(){
 
   main.innerHTML = `
     <div class="hero">
-      <div class="hero-emoji">👋</div>
-      <h1>Привіт! Раді бачити вас у команді BEA</h1>
-      <p>Тут — короткий і дружній онбординг для викладачів: короткі розділи (~15–20 хв. на все) і фінальний тест, щоб переконатися, що робочі процеси вам зрозумілі. Все, що є в тесті, спершу розібрано в розділах — без несподіванок.</p>
+      <div class="hero-emoji">📚</div>
+      <h1>Раді вітати вас у новому семестрі!</h1>
+      <p>Зібрали тут основні правила роботи в BEA — коротко і по суті. Знайдіть, будь ласка, ~10 хвилин, щоб спокійно пройтися по розділах, а наприкінці — фінальний тест, щоб закріпити 🙂</p>
       <button class="btn btn-primary" onclick="openSection(0)">Почати онбординг →</button>
     </div>
     <h3 style="margin:0 0 14px;color:var(--bea-blue-deep);font-size:16px;">Що всередині</h3>
@@ -1439,6 +1457,13 @@ function renderResultsView(){
     </div>
     <h3 style="margin:24px 0 12px;color:var(--bea-blue-deep);">Розбір відповідей</h3>
     ${reviewHtml}
+
+    <div class="feedback-card">
+      <h3 style="margin:0 0 6px;font-size:15px;"><span class="ic">💬</span>Маєте що сказати?</h3>
+      <p>Анонімний фідбек — про онбординг чи взагалі про будь-що. Ми не бачимо, хто його залишив.</p>
+      <button class="btn btn-ghost" style="margin-top:10px;" onclick="goToFeedback()">Залишити анонімний фідбек →</button>
+    </div>
+
     <div class="footer-nav">
       <button class="btn btn-ghost" onclick="restartTest()">↺ Пройти тест ще раз</button>
       <button class="btn btn-primary" onclick="goHome()">На головну</button>
@@ -1461,6 +1486,80 @@ function restartTest(){
 }
 
 /* =========================================================
+   ANONYMOUS FEEDBACK
+   ========================================================= */
+function goToFeedback(){
+  currentView = "feedback";
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+function setFeedbackRating(n){
+  feedbackRating = n;
+  renderFeedbackView();
+}
+
+function renderFeedbackView(){
+  if(feedbackStatus==="sent"){
+    main.innerHTML = `
+      <div class="feedback-card feedback-thanks">
+        <div class="emoji">🙏</div>
+        <h3 style="margin:0 0 6px;">Дякуємо за фідбек!</h3>
+        <p style="margin:0;">Ми не бачимо, хто його залишив, — форма повністю анонімна.</p>
+      </div>
+      <div class="footer-nav" style="justify-content:center;">
+        <button class="btn btn-primary" onclick="goHome()">На головну</button>
+      </div>
+    `;
+    return;
+  }
+
+  const stars = [1,2,3,4,5].map(n=>
+    `<button class="star-btn ${n<=feedbackRating?'active':''}" onclick="setFeedbackRating(${n})">⭐</button>`
+  ).join("");
+
+  main.innerHTML = `
+    <div class="eyebrow">💬 Анонімний фідбек</div>
+    <h1 class="page-title">Анонімний фідбек</h1>
+    <p class="page-lede">Ми не бачимо ваші відповіді — форма повністю анонімна. Можете написати не тільки про онбординг, а взагалі про будь-що: роботу платформи, трекер, комунікацію з менеджерами, ідеї чи незручності — все, чим хочете поділитися.</p>
+    <div class="feedback-card">
+      <p style="margin-bottom:0;">Оцінка (необов'язково):</p>
+      <div class="stars">${stars}</div>
+      <textarea class="quiz-text" id="feedbackTextarea" placeholder="Про онбординг, роботу, ідеї, незручності — все, чим хочете поділитися…" oninput="feedbackText=this.value">${feedbackText}</textarea>
+      ${feedbackStatus==="failed" ? `<div class="report-status failed" style="margin-top:14px;">⚠️ Не вдалося надіслати. Спробуйте ще раз.</div>` : ""}
+    </div>
+    <div class="footer-nav">
+      <button class="btn btn-ghost" onclick="goHome()">Пропустити</button>
+      <button class="btn btn-primary" ${feedbackStatus==="sending"?"disabled":""} onclick="sendFeedback()">${feedbackStatus==="sending"?"Надсилаємо…":"Надіслати фідбек →"}</button>
+    </div>
+  `;
+}
+
+async function sendFeedback(){
+  if(feedbackRating===0 && !feedbackText.trim()){
+    goHome();
+    return;
+  }
+  feedbackStatus = "sending";
+  renderFeedbackView();
+  try{
+    const res = await fetch("/api/submit-feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rating: feedbackRating,
+        feedback: feedbackText.trim(),
+        submittedAt: new Date().toISOString()
+      })
+    });
+    feedbackStatus = res.ok ? "sent" : "failed";
+  } catch(err){
+    feedbackStatus = "failed";
+  }
+  renderFeedbackView();
+}
+
+/* =========================================================
    ROOT RENDER
    ========================================================= */
 function renderAll(){
@@ -1472,6 +1571,7 @@ function renderAll(){
   if(currentView==="welcome") renderWelcomeView();
   else if(currentView==="section") renderSectionView();
   else if(currentView==="test") renderTestView();
+  else if(currentView==="feedback") renderFeedbackView();
   else renderResultsView();
 }
 
