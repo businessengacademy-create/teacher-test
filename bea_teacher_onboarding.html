@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Онбординг викладача — Business English Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bea-blue:#71A7EF;
+    --bea-blue-deep:#2F66B5;
+    --bea-raspberry:#D63056;
+    --bea-pink:#E9748E;
+    --bea-red:#FF2728;
+    --bea-ink:#1A1A1A;
+    --bea-mauve:#C1B0C0;
+    --bea-grey:#D8D8D8;
+    --bea-offwhite:#F8F8F8;
+    --bea-white:#FFFFFF;
+    --shadow-sm:0 2px 10px rgba(24,40,70,.06);
+    --shadow-md:0 10px 30px rgba(24,40,70,.09);
+    --shadow-lg:0 20px 50px rgba(24,40,70,.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(1100px 600px at 100% -10%, #eaf2fe 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #fdeef1 0%, transparent 55%),
+      var(--bea-offwhite);
+    color:var(--bea-ink);
+  }
+  h1,h2,h3,.brand-font{font-family:'Montserrat',sans-serif;}
+
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar{
+    width:288px;
+    flex-shrink:0;
+    background:var(--bea-white);
+    border-right:1px solid #ECECEC;
+    padding:26px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:2px 8px 20px 8px;
+    margin-bottom:14px;
+    cursor:pointer;
+  }
+  .brand .logo-badge{
+    width:38px;height:38px;border-radius:12px;
+    background:linear-gradient(135deg,var(--bea-blue),var(--bea-blue-deep));
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:18px;box-shadow:var(--shadow-sm);
+  }
+  .brand-title{font-size:14.5px;font-weight:800;color:var(--bea-blue-deep);line-height:1.25;}
+  .brand-sub{font-size:11px;color:var(--bea-mauve);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:10px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--bea-ink);
+    transition:background .15s, color .15s, transform .1s;
+    user-select:none;
+  }
+  .nav-item:hover{background:#F3F6FC; transform:translateX(2px);}
+  .nav-item.active{background:linear-gradient(135deg,var(--bea-blue),#8fbdf5); color:#fff; box-shadow:var(--shadow-sm);}
+  .nav-num{
+    width:26px;height:26px;border-radius:9px;
+    background:var(--bea-offwhite);
+    font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .nav-item.active .nav-num{background:rgba(255,255,255,.25);}
+  .nav-item.done .nav-num{background:#e8f6ea;}
+  .nav-item.done.active .nav-num{background:rgba(255,255,255,.25);}
+  .nav-check{color:#3a9247;font-weight:800;font-size:13px;}
+  .nav-item.active .nav-check{color:#fff;}
+  .nav-label{flex:1;}
+
+  .nav-divider{height:1px;background:#ECECEC;margin:14px 6px;}
+
+  .nav-test{
+    display:flex;align-items:center;gap:11px;
+    padding:12px;border-radius:12px;
+    font-size:13.5px;font-weight:700;
+    color:var(--bea-mauve);
+    cursor:not-allowed;
+    background:transparent;
+    transition:.15s;
+  }
+  .nav-test.unlocked{color:var(--bea-raspberry);cursor:pointer;}
+  .nav-test.unlocked:hover{background:#fdeef1; transform:translateX(2px);}
+  .nav-test.active{background:linear-gradient(135deg,var(--bea-raspberry),#ef6b86); color:#fff; box-shadow:var(--shadow-sm);}
+  .nav-test .nav-num{background:var(--bea-offwhite);}
+  .nav-test.active .nav-num{background:rgba(255,255,255,.25);}
+
+  .sidebar-progress{
+    margin-top:auto;
+    padding:16px 10px 4px 10px;
+    border-top:1px solid #ECECEC;
+  }
+  .progress-track{
+    width:100%;height:8px;border-radius:6px;
+    background:#EEF1F6;
+    overflow:hidden;
+    margin-top:8px;
+  }
+  .progress-fill{
+    height:100%;background:linear-gradient(90deg,var(--bea-blue),var(--bea-raspberry));
+    border-radius:6px;
+    transition:width .4s;
+  }
+  .progress-text{font-size:11.5px;color:var(--bea-mauve);font-weight:700;margin-top:2px;}
+
+  /* ===== MAIN ===== */
+  .main{
+    flex:1;
+    padding:44px 52px 90px;
+    max-width:880px;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--bea-raspberry);margin-bottom:10px;
+    background:#fdeef1;padding:4px 12px;border-radius:100px;
+  }
+  .page-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:6px;}
+  .page-icon{
+    width:52px;height:52px;border-radius:16px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:26px;
+    box-shadow:var(--shadow-sm);
+  }
+  .page-title{
+    font-size:27px;font-weight:800;color:var(--bea-blue-deep);
+    margin:0 0 4px 0;line-height:1.25;
+  }
+  .page-lede{
+    font-size:15px;color:#6b7280;margin:0 0 30px 0;max-width:640px;line-height:1.55;
+  }
+
+  .card{
+    background:var(--bea-white);
+    border:1px solid #EEF0F3;
+    box-shadow:var(--shadow-sm);
+    border-radius:20px;
+    padding:24px 26px;
+    margin-bottom:18px;
+    transition:box-shadow .2s, transform .2s;
+  }
+  .card:hover{box-shadow:var(--shadow-md); transform:translateY(-1px);}
+  .card h3{
+    margin:0 0 14px 0;font-size:15px;font-weight:700;color:var(--bea-ink);
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h3 .ic{
+    width:30px;height:30px;border-radius:10px;background:#eef4fe;color:var(--bea-blue-deep);
+    display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;
+  }
+  .card.warm h3 .ic{background:#fdeef1;color:var(--bea-raspberry);}
+  ul.check-list{list-style:none;margin:0;padding:0;}
+  ul.check-list li{
+    position:relative;padding:7px 0 7px 28px;font-size:14.5px;line-height:1.6;color:var(--bea-ink);
+  }
+  ul.check-list li::before{
+    content:"✓";position:absolute;left:0;top:6px;width:19px;height:19px;border-radius:7px;
+    background:#eaf2fe;color:var(--bea-blue-deep);font-size:11px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ul.check-list.warn li::before{content:"!";background:#fdeef1;color:var(--bea-raspberry);}
+
+  ol.step-list{list-style:none;margin:0;padding:0;counter-reset:step;}
+  ol.step-list li{
+    position:relative;padding:7px 0 7px 34px;font-size:14.5px;line-height:1.6;color:var(--bea-ink);
+    counter-increment:step;
+  }
+  ol.step-list li::before{
+    content:counter(step);position:absolute;left:0;top:5px;width:22px;height:22px;border-radius:7px;
+    background:var(--bea-blue-deep);color:#fff;font-size:11.5px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sub-block{margin-top:16px;padding-top:14px;border-top:1px dashed #EEF0F3;}
+  .sub-block .sub-title{font-weight:700;font-size:13.5px;color:var(--bea-blue-deep);margin-bottom:8px;}
+
+  .pill{
+    display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;
+    background:#eaf2fe;color:var(--bea-blue-deep);
+    margin-bottom:10px;
+  }
+  .pill.danger{color:var(--bea-raspberry);background:#fdeef1;}
+  .pill.good{color:#2e6b2f;background:#eaf7ea;}
+
+  .callout{
+    display:flex;gap:14px;align-items:flex-start;
+    background:linear-gradient(135deg,#fff7f8,#fdeef1);
+    border:1px solid #f6cdd9;border-radius:16px;padding:16px 18px;margin-top:6px;
+  }
+  .callout .callout-ic{font-size:22px;flex-shrink:0;line-height:1;}
+  .callout b{color:var(--bea-raspberry);}
+
+  .link-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13.5px;font-weight:700;color:var(--bea-blue-deep);
+    text-decoration:none;border-bottom:2px solid var(--bea-blue);padding-bottom:1px;
+  }
+
+  .footer-nav{
+    display:flex;justify-content:space-between;align-items:center;margin-top:30px;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:700;font-size:14px;
+    padding:13px 24px;border-radius:12px;border:none;cursor:pointer;
+    transition:transform .12s, box-shadow .12s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--bea-raspberry),#ef6b86);color:#fff;box-shadow:0 6px 18px rgba(214,48,86,.28);}
+  .btn-primary:hover{box-shadow:0 8px 22px rgba(214,48,86,.4); transform:translateY(-1px);}
+  .btn-ghost{background:#fff;color:var(--bea-blue-deep);border:1.5px solid #dbe6fb;}
+  .btn-ghost:hover{background:#eef4fe;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;}
+
+  /* ===== WELCOME ===== */
+  .hero{
+    background:linear-gradient(135deg,var(--bea-blue-deep),var(--bea-blue) 60%, #8fbdf5);
+    border-radius:26px;padding:48px 44px;color:#fff;box-shadow:var(--shadow-lg);
+    position:relative;overflow:hidden;margin-bottom:30px;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+    background:rgba(255,255,255,.12);
+  }
+  .hero::before{
+    content:"";position:absolute;right:60px;bottom:-90px;width:180px;height:180px;border-radius:50%;
+    background:rgba(255,255,255,.08);
+  }
+  .hero-emoji{font-size:40px;margin-bottom:10px;}
+  .hero h1{font-size:30px;font-weight:800;margin:0 0 10px;line-height:1.25;position:relative;}
+  .hero p{font-size:15px;line-height:1.6;max-width:520px;opacity:.95;margin:0 0 22px;position:relative;}
+  .hero .btn-primary{background:#fff;color:var(--bea-raspberry);box-shadow:0 8px 22px rgba(0,0,0,.15);position:relative;}
+  .hero .btn-primary:hover{box-shadow:0 10px 26px rgba(0,0,0,.22);}
+
+  .tiles{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:8px;
+  }
+  .tile{
+    background:var(--bea-white);border:1px solid #EEF0F3;border-radius:18px;padding:18px;
+    display:flex;gap:12px;align-items:center;cursor:pointer;box-shadow:var(--shadow-sm);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+  .tile .tile-ic{
+    width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-size:20px;flex-shrink:0;
+  }
+  .tile-title{font-size:13.5px;font-weight:700;}
+  .tile-num{font-size:11px;color:var(--bea-mauve);font-weight:700;margin-bottom:2px;}
+
+  /* ===== QUIZ ===== */
+  .quiz-progress-wrap{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+  .quiz-progress-bar{flex:1;height:9px;background:#EEF1F6;border-radius:6px;overflow:hidden;}
+  .quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--bea-raspberry),var(--bea-pink));border-radius:6px;transition:width .3s;}
+  .quiz-progress-label{font-size:12.5px;font-weight:700;color:var(--bea-mauve);white-space:nowrap;}
+
+  .quiz-card{background:var(--bea-white);border:1px solid #EEF0F3;box-shadow:var(--shadow-md);border-radius:22px;padding:30px 30px 26px;}
+  .quiz-section-tag{
+    display:inline-block;font-size:11.5px;font-weight:700;color:var(--bea-blue-deep);
+    text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;
+    background:#eaf2fe;padding:4px 12px;border-radius:100px;
+  }
+  .quiz-q{font-size:18.5px;font-weight:700;color:var(--bea-ink);line-height:1.45;margin-bottom:6px;}
+  .quiz-hint{font-size:13px;color:#7a8296;margin-bottom:18px;line-height:1.55;}
+  .quiz-hint em{color:var(--bea-blue-deep);font-style:normal;font-weight:600;}
+
+  .opt{
+    display:flex;align-items:flex-start;gap:13px;
+    padding:14px 17px;border:1.5px solid #EEF0F3;border-radius:14px;
+    margin-bottom:10px;cursor:pointer;font-size:14.5px;line-height:1.55;
+    transition:border-color .12s, background .12s, transform .1s;
+    background:#fcfcfd;
+  }
+  .opt:hover{border-color:var(--bea-blue); transform:translateX(2px);}
+  .opt.selected{border-color:var(--bea-blue-deep);background:#eef4fe;}
+  .opt .mark{
+    width:22px;height:22px;border-radius:50%;border:2px solid #dfe3ea;flex-shrink:0;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;
+    background:#fff;
+  }
+  .opt.multi .mark{border-radius:7px;}
+  .opt.selected .mark{border-color:var(--bea-blue-deep);background:var(--bea-blue-deep);}
+
+  .opt.result-correct{border-color:#4CAF50;background:#eef8ee;}
+  .opt.result-correct .mark{border-color:#4CAF50;background:#4CAF50;}
+  .opt.result-missed{border-color:#4CAF50;background:#fff;}
+  .opt.result-missed .mark{border-color:#4CAF50;}
+  .opt.result-wrong{border-color:var(--bea-raspberry);background:#fdeef1;}
+  .opt.result-wrong .mark{border-color:var(--bea-raspberry);background:var(--bea-raspberry);}
+
+  .order-list{list-style:none;margin:0;padding:0;}
+  .order-item{
+    display:flex;align-items:center;gap:13px;
+    background:#fcfcfd;border:1.5px solid #EEF0F3;border-radius:14px;
+    padding:13px 16px;margin-bottom:9px;cursor:grab;font-size:14px;
+    transition:box-shadow .15s;
+  }
+  .order-item:hover{box-shadow:var(--shadow-sm);}
+  .order-item.dragging{opacity:.4;}
+  .order-item .handle{color:var(--bea-mauve);font-size:17px;}
+  .order-item .pos{
+    width:26px;height:26px;border-radius:50%;background:var(--bea-blue);color:#fff;
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .order-item.result-correct{border-color:#4CAF50;background:#eef8ee;}
+  .order-item.result-wrong{border-color:var(--bea-raspberry);background:#fdeef1;}
+  .order-arrows{display:flex;gap:4px;flex-shrink:0;}
+  .order-arrow-btn{
+    width:28px;height:28px;border-radius:8px;border:1.5px solid var(--bea-grey);background:#fff;
+    color:var(--bea-blue-deep);font-size:14px;font-weight:700;cursor:pointer;
+  }
+  .order-arrow-btn:hover{background:#eef4fe;}
+  .order-arrow-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+  textarea.quiz-text{
+    width:100%;min-height:96px;border:1.5px solid #EEF0F3;border-radius:14px;
+    padding:14px 16px;font-family:'Inter',sans-serif;font-size:14px;resize:vertical;background:#fcfcfd;
+  }
+  textarea.quiz-text:focus{outline:none;border-color:var(--bea-blue-deep);background:#fff;}
+
+  .explain{
+    margin-top:18px;padding:14px 16px;border-radius:14px;font-size:13.5px;line-height:1.55;
+    display:flex;align-items:center;gap:10px;font-weight:600;
+  }
+  .explain.ok{background:#eaf7ea;color:#2e6b2f;}
+  .explain.bad{background:#fdeef1;color:#a02040;}
+
+  /* ===== RESULTS ===== */
+  .score-hero{
+    text-align:center;padding:42px 20px;
+    background:linear-gradient(135deg,#fff,#fdf3f5);
+    border:1px solid #f6cdd9;box-shadow:var(--shadow-md);
+    border-radius:24px;margin-bottom:22px;
+  }
+  .score-emoji{font-size:40px;margin-bottom:6px;}
+  .score-num{font-size:58px;font-weight:800;color:var(--bea-raspberry);font-family:'Montserrat',sans-serif;}
+  .score-total{font-size:20px;color:var(--bea-mauve);font-weight:600;}
+  .score-msg{font-size:15.5px;margin-top:12px;color:var(--bea-ink);font-weight:700;}
+  .review-item{
+    background:var(--bea-white);border:1px solid #EEF0F3;box-shadow:var(--shadow-sm);border-radius:16px;
+    padding:16px 18px;margin-bottom:10px;
+  }
+  .review-item.wrong{border-left:4px solid var(--bea-raspberry);}
+  .review-item.right{border-left:4px solid #4CAF50;}
+  .review-q{font-weight:700;font-size:14px;margin-bottom:6px;}
+  .review-a{font-size:13.5px;color:#666;line-height:1.55;}
+  .review-a b{color:var(--bea-ink);}
+
+  @media (max-width: 860px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:14px;gap:8px;position:relative;height:auto;}
+    .brand,.sidebar-progress,.nav-divider{display:none;}
+    .nav-item,.nav-test{flex-shrink:0;}
+    .main{padding:26px 18px 60px;}
+    .tiles{grid-template-columns:1fr;}
+    .hero{padding:32px 26px;}
+  }
+
+  /* ===== GATE (name/email) ===== */
+  .app.gate-mode .sidebar{display:none;}
+  .app.gate-mode .main{
+    max-width:100%;display:flex;align-items:center;justify-content:center;
+    min-height:100vh;padding:24px;
+  }
+  .gate-card{
+    max-width:440px;width:100%;background:var(--bea-white);border:1px solid #EEF0F3;
+    box-shadow:var(--shadow-lg);border-radius:24px;padding:40px 36px;text-align:center;
+  }
+  .gate-card .logo-badge-big{
+    width:56px;height:56px;border-radius:16px;margin:0 auto 18px;
+    background:linear-gradient(135deg,var(--bea-blue),var(--bea-blue-deep));
+    display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:var(--shadow-sm);
+  }
+  .gate-card h1{font-size:22px;font-weight:800;color:var(--bea-blue-deep);margin:0 0 8px;}
+  .gate-card p{font-size:14px;color:#6b7280;line-height:1.55;margin:0 0 24px;}
+  .gate-field{margin-bottom:14px;text-align:left;}
+  .gate-field label{display:block;font-size:12.5px;font-weight:700;color:var(--bea-ink);margin-bottom:6px;}
+  .gate-field input{
+    width:100%;padding:12px 14px;border:1.5px solid #EEF0F3;border-radius:12px;
+    font-family:'Inter',sans-serif;font-size:14px;background:#fcfcfd;
+  }
+  .gate-field input:focus{outline:none;border-color:var(--bea-blue-deep);background:#fff;}
+  .gate-error{font-size:12.5px;color:var(--bea-raspberry);font-weight:600;margin:-6px 0 12px;text-align:left;min-height:16px;}
+  .gate-note{font-size:11.5px;color:var(--bea-mauve);margin-top:16px;line-height:1.5;}
+
+  .user-badge{
+    display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;
+    background:var(--bea-offwhite);font-size:12px;font-weight:600;color:#555;margin:0 4px 10px;
+  }
+  .user-badge .dot{width:7px;height:7px;border-radius:50%;background:#4CAF50;flex-shrink:0;}
+
+  .report-status{
+    display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;
+    font-size:13.5px;font-weight:600;margin-bottom:16px;
+  }
+  .report-status.sending{background:#eef4fe;color:var(--bea-blue-deep);}
+  .report-status.sent{background:#eaf7ea;color:#2e6b2f;}
+  .report-status.failed{background:#fff8e6;color:#9a6b00;}
+</style>
+</head>
+<body>
+<div class="app" id="appRoot">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="brand" onclick="goHome()">
+      <div class="logo-badge">🎓</div>
+      <div>
+        <div class="brand-title">Business English<br>Academy</div>
+        <div class="brand-sub">Онбординг викладача</div>
+      </div>
+    </div>
+    <div id="userBadge"></div>
+    <div id="navList"></div>
+    <div class="nav-divider"></div>
+    <div class="nav-test" id="navTest" onclick="goToTest()">
+      <div class="nav-num">📝</div>
+      <div class="nav-label">Тест на знання</div>
+    </div>
+    <div class="sidebar-progress">
+      <div class="progress-text" id="progressText">Пройдено 0 з 10 розділів</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main"></div>
+</div>
+
+<script>
+/* =========================================================
+   CONTENT: 10 onboarding sections
+   ========================================================= */
+const sections = [
+{
+  emoji:"💻", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Робота з платформою",
+  lede:"Базові інструменти, з якими ви працюєте щодня.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">📍</span>Що де знаходиться</h3>
+      <ul class="check-list">
+        <li>Використовуйте <b>особисту пошту та пароль</b> (надає Даша / Оксана / Олена) для входу на платформу.</li>
+        <li><b>My Groups</b> — ваші групи та студенти.</li>
+        <li><b>Courses</b> — усі курси BEA.</li>
+        <li>Доступ студентам до курсів підключає <b>менеджер проєкту</b> — після того, як ви повідомите йому, який курс потрібно підключити.</li>
+        <li><b>Workspace</b> — швидкі посилання на Tracker, Zoom, бонусну систему та інші робочі інструменти.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  emoji:"📂", color:"#fdeef1", iconColor:"#D63056",
+  title:"Контент і доступ до курсу",
+  lede:"Які курси є на платформі, хто підключає доступ і де шукати результати студентів.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">🗂️</span>Типи курсів</h3>
+      <ul class="check-list">
+        <li>Основний курс групи чи студента визначає <b>викладач</b> (якщо це не спеціалізований курс).</li>
+        <li>Уроки з позначкою <b>«Optional lessons»</b> — необов'язкові для проходження.</li>
+        <li><b>Фанові уроки (English for Fun)</b> — додаткові матеріали для урізноманітнення уроків, доступні для всіх груп, варто використовувати приблизно 1 раз на місяць.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🔑</span>Як працює доступ до курсів у студентів</h3>
+      <ul class="check-list">
+        <li>Студенти <b>не мають</b> доступу до всіх курсів на платформі — лише до підключеного.</li>
+        <li>Якщо група змінює курс — доступ до старого курсу у студента <b>зникає</b>.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  emoji:"🗣️", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Проведення уроків",
+  lede:"Методика заняття та стандарти якості матеріалів — в одному місці.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">🎯</span>Працюємо за комунікативною методикою</h3>
+      <ul class="check-list">
+        <li>максимум англійської (або цільової мови);</li>
+        <li>мінімум перекладу;</li>
+        <li>багато <b>Speaking Practice</b>;</li>
+        <li>використання <b>ICQs</b> та <b>CCQs</b>;</li>
+        <li>робота в парах та групах;</li>
+        <li>контекстне пояснення нової лексики та граматики.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="pill good">🌟 Головна мета</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;">Навчити студентів <b>спілкуватися мовою</b> — а не просто знати правила.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="ic">📦</span>Матеріали та джерела</h3>
+      <ul class="check-list">
+        <li>крім матеріалів платформи можна використовувати власні якісні матеріали;</li>
+        <li>використовуємо лише перевірені джерела;</li>
+        <li>перед демонстрацією екрана перевіряємо відкриті вкладки;</li>
+        <li>якщо студенту потрібен переклад — уточнюємо, якою мовою йому буде комфортно;</li>
+        <li>для початкових рівнів на платформі вже доступний словник.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="pill danger">⛔ Заборонено</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;">Не використовуємо <b>російські сайти, сервіси та матеріали</b>.</p>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"✅", color:"#fdeef1", iconColor:"#D63056",
+  title:"Після кожного уроку",
+  lede:"Чотири дії, які закривають кожне заняття.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">🧾</span>Обов'язково після заняття</h3>
+      <ul class="check-list">
+        <li>заповнити <b>Tracker</b> — <b>відразу після заняття або наступного дня</b>, не чекаючи кінця місяця;</li>
+        <li>написати <b>Follow-up</b> (що було пройдено на уроці);</li>
+        <li>додати <b>домашнє завдання</b> або матеріали до уроку;</li>
+        <li>за потреби — написати студенту приватне повідомлення через <b>Messages</b>.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="pill">💡 Корисно знати</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;">Усі повідомлення на платформі автоматично надходять студентам на електронну пошту.</p>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"📊", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Робота з трекером",
+  lede:"Покроково: створення уроків поза розкладом, відвідуваність, заміни, скасування, Payroll і Feedback.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">🗓️</span>Як створити дату заняття поза стандартним розкладом</h3>
+      <ol class="step-list">
+        <li>Натисніть на кнопку <b>«Create session»</b> у вкладці <b>Home</b>.</li>
+        <li>Заповніть потрібні поля.</li>
+        <li>Натисніть на кнопку <b>«Create»</b>.</li>
+      </ol>
+      <div class="sub-block">
+        <p style="font-size:14px;margin:0;line-height:1.55;">Дата нового уроку з'явиться у вкладці <b>«Lessons»</b> для обраного класу ✅</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">✅</span>Заповнення відвідуваності</h3>
+      <ol class="step-list">
+        <li>Натисніть на потрібний клас.</li>
+        <li>Натисніть кнопку <b>«Attendance»</b>.</li>
+        <li>Натисніть кнопку <b>«Select date»</b>.</li>
+        <li>Натисніть кнопку <b>«Select option»</b> поряд з потрібним учнем і оберіть потрібний статус з випадаючого списку для кожного учня.</li>
+        <li>Натисніть кнопку <b>«Save date»</b>.</li>
+      </ol>
+      <div class="sub-block">
+        <p style="font-size:14px;margin:0;line-height:1.55;">Після цього відвідуваність буде заповнена, і ви побачите на <b>Home page</b> позначку <b>«Completed»</b> поряд з датою ✅</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">👥</span>Як поставити заміну</h3>
+      <ol class="step-list">
+        <li>Перейдіть у вкладку <b>«Lessons»</b> ➡️ <b>«Class management»</b>.</li>
+        <li>Натисніть <b>«Assign substitution»</b>.</li>
+        <li>Заповніть потрібні дані.</li>
+        <li>Натисніть <b>«Save data»</b>.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">🚫</span>Як відмінити урок</h3>
+      <ol class="step-list">
+        <li>Перейдіть у вкладку <b>«Lessons»</b>.</li>
+        <li>Натисніть вкладку <b>«Class Management»</b>.</li>
+        <li>Заповніть потрібні поля.</li>
+        <li>Натисніть <b>«Save data»</b>.</li>
+      </ol>
+    </div>
+
+    <div class="card warm">
+      <h3><span class="ic">⚠️</span>Статуси уроків — обов'язково</h3>
+      <p style="font-size:14px;margin:0 0 12px;line-height:1.6;">Обов'язково заповнюйте статус уроків, щоб вони не залишалися порожніми. Якщо дата залишиться без статусу, ми не зможемо врахувати цю дату при формуванні рахунку компанії та вашої ЗП.</p>
+      <ul class="check-list warn">
+        <li><b>Cancellation</b> — ви знаєте, що заняття не відбудеться.</li>
+        <li><b>Late Cancellation</b> — студенти пізно попередили, заняття буде зараховане як проведене.</li>
+        <li><b>Absent (no warning)</b> — студент не попередив, заняття не відбулося, але буде зараховано як проведене.</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">
+        <div class="callout-ic">‼️</div>
+        <div>Зверніть увагу: можливість заповнювати трекер заднім числом (а точніше — минулим місяцем) <b>зникає</b>.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">💳</span>Вкладка Payroll</h3>
+      <p style="font-size:14px;margin:0;line-height:1.6;">Зарплата зараховується автоматично після заповнення відвідуваності. Побачити суму можна натиснувши <b>«Current month»</b> (за актуальний місяць) або <b>«All time»</b> (за весь період).</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">📅</span>Щомісячний звіт</h3>
+      <p style="font-size:14px;margin:0;line-height:1.6;">Подається вчасно, в кінці місяця. Щоб підтвердити загальну кількість годин та отримати виплату — зробіть скріншот сторінки <b>Salary</b> в трекері та надішліть його <b>@katerina_metolidi</b> в особисті повідомлення.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">📊</span>Вкладка Feedback</h3>
+      <ol class="step-list">
+        <li>Натисніть кнопку <b>«Feedback»</b>.</li>
+        <li>Оберіть потрібний <b>Term</b>.</li>
+        <li>Результати тестування у відсотках переносимо у <b>Skills</b> — платформа вже рахує ці відсотки за кожну категорію тесту, вираховувати самостійно не потрібно.</li>
+        <li>Фідбек залишайте у полі <b>«Feedback»</b>.</li>
+      </ol>
+      <div class="sub-block">
+        <span class="pill danger">❗ Важливо</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;">Фідбек пишемо <b>англійською</b>, навіть якщо студент вивчає іншу мову.</p>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"👤", color:"#fdeef1", iconColor:"#D63056",
+  title:"Індивідуальні студенти",
+  lede:"Пробне заняття та що робити з пропусками.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">🚀</span>Пробне заняття</h3>
+      <ul class="check-list">
+        <li>Новий студент завжди починає з <b>пробного уроку</b>.</li>
+        <li>Якщо після пробного немає підтвердження від менеджера, що студенту сподобався урок, — наступні уроки <b>не проводимо до відповіді студента</b>.</li>
+      </ul>
+    </div>
+    <div class="card warm">
+      <h3><span class="ic">⚠️</span>Пропуски — коли повідомляти менеджеру</h3>
+      <p style="font-size:14px;margin:0 0 8px;">Обов'язково повідомляємо менеджеру проєкту, якщо студент:</p>
+      <ul class="check-list warn">
+        <li>не прийшов на пробний урок;</li>
+        <li>пропустив більше двох занять поспіль;</li>
+        <li>не відповідає на повідомлення.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  emoji:"💰", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Оплата та звітність",
+  lede:"Що потрібно для коректного нарахування заробітної плати.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">📋</span>Для нарахування ЗП необхідно</h3>
+      <ul class="check-list">
+        <li>своєчасно проводити <b>модульні та Progress Tests</b> і вносити результати в Tracker;</li>
+        <li>дотримуватися правил заповнення трекера — деталі у розділі <b>«Робота з трекером»</b> (статуси уроків, щомісячний звіт, скрін Salary).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🎁</span>Бонусний шоп</h3>
+      <p style="font-size:14px;margin:0;line-height:1.55;">За активність нараховуються бонуси, які можна обміняти на подарунки в <b>бонусному шопі</b> — посилання на нього є у <b>Workspace</b>.</p>
+    </div>
+  `
+},
+{
+  emoji:"🔢", color:"#fdeef1", iconColor:"#D63056",
+  title:"Кількість занять (Autodoc)",
+  lede:"Скільки уроків можна проводити на місяць за проєктом Autodoc.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">👥</span>Групи</h3>
+      <div class="callout">
+        <div class="callout-ic">👥</div>
+        <div>Не більше <b>8 занять на місяць</b>.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🙋</span>Індивідуальні студенти</h3>
+      <div class="callout">
+        <div class="callout-ic">🙋</div>
+        <div>Обмеження по кількості занять на місяць <b>немає</b>. Головне — дотримуватися <b>погодженої кількості уроків на тиждень</b>, яку повідомляє Даша.</div>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"🎥", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Corporate Zoom",
+  lede:"Бронювання та правила проведення заняття в корпоративному Zoom.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">📅</span>Бронювання</h3>
+      <p style="font-size:14.5px;line-height:1.6;margin:0;">Використовуємо документ <b>Booking Time in Zoom</b> або звертаємося до менеджерів.</p>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🎬</span>Основні правила</h3>
+      <ul class="check-list">
+        <li>Використовуємо <b>корпоративний Zoom</b>.</li>
+        <li>Заняття триває з <b>ХХ:01 до ХХ:59</b>.</li>
+        <li>Організатор конференції — <b>викладач</b>: заходить у Zoom самостійно і запускає конференцію.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="sub-title">Якщо під час відпрацювання змінюється Zoom-посилання</span>
+        <ul class="check-list">
+          <li>повідомляємо студентів та надсилаємо нове посилання;</li>
+          <li>повідомляємо адміністраторів, щоб вони оновили посилання в нагадуваннях.</li>
+        </ul>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"🔒", color:"#fdeef1", iconColor:"#D63056",
+  title:"Конфіденційність (NDA)",
+  lede:"Правила, які не можна порушувати.",
+  html:`
+    <div class="card warm">
+      <h3><span class="ic">🚫</span>Не допускається</h3>
+      <ul class="check-list warn">
+        <li>поширення матеріалів компанії;</li>
+        <li>передача паролів або доступів;</li>
+        <li>поширення фінансової чи внутрішньої інформації;</li>
+        <li>пошук студентів у соцмережах;</li>
+        <li>фото- чи відеозйомка уроків без згоди;</li>
+        <li>передача інформації про клієнтів або партнерів компанії.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="pill danger">📣 У разі порушення</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;">Або підозри на витік інформації — необхідно <b>одразу повідомити компанію</b>.</p>
+      </div>
+    </div>
+  `
+},
+{
+  emoji:"🆘", color:"#eaf2fe", iconColor:"#2F66B5",
+  title:"Підтримка та звернення",
+  lede:"До кого йти, якщо щось не працює або незрозуміло.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">📚</span>Підключення курсу</h3>
+      <p style="font-size:14.5px;margin:0;line-height:1.6;">Тільки до <b>менеджера проєкту</b> — не до будь-якого менеджера.</p>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🛠️</span>Технічна проблема на платформі</h3>
+      <ul class="check-list">
+        <li>написати в Telegram-групі <b>«Tech problems platform»</b>;</li>
+        <li>або повідомити будь-якому менеджеру.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="ic">📋</span>Технічна проблема в трекері</h3>
+      <ul class="check-list">
+        <li>повідомити менеджера <b>Дар'ю</b> або <b>Оксану</b>;</li>
+        <li>або написати в чат Telegram-групи <b>«BEA Tracker»</b>.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  emoji:"📊", color:"#fdeef1", iconColor:"#D63056",
+  title:"Тестування та аналіз результатів",
+  lede:"Тести вже на платформі, як аналізувати результати — і що робити, якщо готовий тест не підходить.",
+  html:`
+    <div class="card">
+      <h3><span class="ic">📥</span>Тести вже на платформі</h3>
+      <p style="font-size:14.5px;line-height:1.6;margin:0 0 10px;">Модульні та Progress Tests вже завантажені на платформу — за замовчуванням користуємося готовими тестами.</p>
+      <div class="sub-block" style="margin-top:0;padding-top:12px;">
+        <span class="sub-title">Де шукати результати студентів</span>
+        <p style="font-size:14px;margin:0;line-height:1.55;"><b>My Progress → Quiz Attempts → Statistics</b>. У трекер результати автоматично <b>не</b> підтягуються.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="ic">📈</span>Після проходження модульних або Progress Tests</h3>
+      <ul class="check-list">
+        <li>переглядайте статистику відповідей;</li>
+        <li>аналізуйте типові помилки;</li>
+        <li>використовуйте результати для планування наступних уроків та повторення складних тем.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="ic">🔗</span>Якщо готовий тест не підходить — конструктори</h3>
+      <p style="font-size:14px;margin:0 0 12px;line-height:1.55;">Якщо ви працюєте за <b>власними матеріалами</b> (не за стандартним курсом платформи), готового тесту під тему уроку просто не існує — тому створюйте тест самостійно через конструктор, вказавши рівень і тему, яку проходили.</p>
+      <p style="font-size:14.5px;margin:0 0 10px;">🔹 <a class="link-btn" href="https://progress-test-constructor.vercel.app/" target="_blank">Конструктор Progress Tests →</a></p>
+      <p style="font-size:14.5px;margin:0;">🔹 <a class="link-btn" href="https://new-module-test-constructor.vercel.app/" target="_blank">Конструктор Module Tests →</a></p>
+    </div>
+    <div class="card">
+      <h3><span class="ic">⚙️</span>Як працювати з конструктором</h3>
+      <ul class="check-list">
+        <li>Оберіть потрібний конструктор.</li>
+        <li>Вкажіть рівень, тему або навички, які потрібно перевірити.</li>
+        <li>Згенеруйте тест, перевірте та за потреби відредагуйте всі завдання.</li>
+        <li>Використовуйте готовий тест зі студентами.</li>
+      </ul>
+      <div class="sub-block">
+        <span class="sub-title">Коли це особливо корисно</span>
+        <ul class="check-list">
+          <li>якщо стандартний тест платформи не відповідає темі уроку;</li>
+          <li>для швидкого створення тесту під конкретну групу або індивідуального студента.</li>
+        </ul>
+      </div>
+      <div class="sub-block">
+        <span class="pill danger">❗ Важливо</span>
+        <ul class="check-list" style="margin-top:6px;">
+          <li>✅ Завжди перевіряйте згенерований тест перед використанням.</li>
+          <li>✅ За потреби виправляйте помилки та некоректні формулювання.</li>
+          <li>⚠️ У конструкторів є денний ліміт генерацій — створюйте тести завчасно.</li>
+        </ul>
+        <p style="font-size:13.5px;color:#777;margin:12px 0 0;font-style:italic;">Конструктор допомагає зекономити час, але відповідальність за якість фінального тесту залишається за викладачем 🙂</p>
+      </div>
+    </div>
+  `
+}
+];
+
+/* =========================================================
+   CONTENT: quiz (30 questions, matches official answer key
+   + 2 bonus questions on the Autodoc lesson-frequency rule)
+   ========================================================= */
+const quiz = [
+{section:"Corporate Zoom", type:"single", q:"Що потрібно обрати під час входу в корпоративний Zoom для початку роботи?",
+  hint:"З'являється вікно <em>Two-step Verification Setup</em> з варіантами Authenticator app / Phone / Skip.",
+  options:["Authenticator app","Phone","Skip"], correct:2},
+{section:"Corporate Zoom", type:"single", q:"О котрій годині потрібно запускати конференцію в корпоративному Zoom?",
+  options:["Згідно з розкладом","За 2 хв. до початку уроку","ХХ:00 / ХХ:01"], correct:2},
+{section:"Corporate Zoom", type:"single", q:"О котрій годині потрібно виходити з Zoom після завершення уроку?",
+  options:["Через 5 хвилин","ХХ:00 / ХХ:59","Після того, як усі студенти договорять"], correct:1},
+{section:"Corporate Zoom", type:"single", q:"Викладач приєднується до уроку через посилання в гугл календарі.",
+  options:["Так","Ні"], correct:1},
+{section:"Corporate Zoom", type:"single", q:"Оберіть організатора конференцій в корпоративному Zoom.",
+  options:["Викладач (заходить в зум самостійно і запускає конференцію)","Менеджер (викладач не заходить у зум, менеджер запускає конференцію)","Викладач має перейти за студентським посиланням на урок і зачекати, коли менеджер запустить конференцію"], correct:0},
+{section:"Corporate Zoom", type:"order", q:"У якій правильній послідовності викладач має розпочати урок?",
+  hint:"Розташуйте кроки у правильному порядку, перетягуючи їх.",
+  items:[
+    {id:1, text:"Надіслати коротке summary уроку та дз у чаті групи"},
+    {id:2, text:"Запустити конференцію як організатор"},
+    {id:3, text:"Привітання / попросити увімкнути за можливістю камери / smalltalk"},
+    {id:4, text:"Зробити демонстрацію екрана"},
+    {id:5, text:"Впустити студентів у зум"},
+    {id:6, text:"Надіслати лінк на актуальний урок у чаті зума та актуалізувати тему уроку"}
+  ],
+  correctOrder:[2,5,3,6,4,1]},
+{section:"Corporate Zoom", type:"multi", q:"Оберіть правильні варіанти комунікації зі студентами.",
+  options:["Навчальна платформа","Корпоративна електронна пошта студента","Telegram-групу (за умови, що студенти самостійно ініціювали перехід та створили спільний чат)","Google Chat","Zoom (чат під час занять)","Особисті повідомлення в месенджерах (за погодженням зі студентом)"],
+  correct:[0,2,4,5]},
+
+{section:"Контент і доступ до курсу", type:"single", q:"Фанові уроки розроблені для окремих спеціальних груп.",
+  options:["Так","Ні"], correct:1},
+{section:"Контент і доступ до курсу", type:"single", q:"Уроки з позначкою «Optional lessons» є обов'язкові для проходження.",
+  options:["Правильно","Неправильно"], correct:1},
+{section:"Контент і доступ до курсу", type:"single", q:"Курси «English for Fun» — це:",
+  options:["Обов'язкові курси лише для спеціальних груп","Додаткові матеріали, які рекомендується використовувати для урізноманітнення уроків (приблизно 1 раз на місяць)"], correct:1},
+{section:"Контент і доступ до курсу", type:"multi", q:"Оберіть усі правильні твердження.",
+  options:["Студенти мають доступ до всіх курсів на платформі","Менеджер проєкту підключає доступ до курсу","Нового студента групи не потрібно окремо підключати до курсу, якщо його група вже підключена","Якщо група змінює курс, доступ до старого курсу у студента зникає"],
+  correct:[1,2,3]},
+{section:"Контент і доступ до курсу", type:"single", q:"Хто визначає курс для групи або індивідуального студента, якщо це НЕ спеціалізований курс?",
+  options:["Компанія","Викладач","Менеджер проєкту"], correct:1},
+{section:"Контент і доступ до курсу", type:"single", q:"Чи може викладач використовувати власні матеріали під час занять?",
+  options:["Так","Ні"], correct:0},
+{section:"Контент і доступ до курсу", type:"single", q:"Результати проходження тесту студентів знаходяться:",
+  options:["My Progress — Quiz Attempts — Statistics","Результати тестування студентів автоматично підтягуються у трекер","Workspace — Quiz Attempts — Statistics"], correct:0},
+
+{section:"Feedback і трекер", type:"single", q:"Вкладка Feedback. Оберіть правильну відповідь.",
+  options:["У вкладці Feedback викладач може вносити результати прогрес-тестів та залишати фідбек для студентів","У вкладці Feedback викладач може залишати лише фідбек для студентів"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"Як часто викладач має заповнювати відвідуваність студентів у трекері?",
+  options:["В кінці місяця","Після оповіщення в чаті від менеджера (в кінці місяця)","Після закінчення заняття / наступний день"], correct:2},
+{section:"Feedback і трекер", type:"single", q:"Чи потрібно надсилати менеджеру в кінці місяця скрін підтвердження відображення інформації вашої вкладки Salary?",
+  options:["Так","Ні"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"Чи є обов'язковим заповнення статусів уроків?",
+  options:["Так","Ні"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"Уважно подивіться на трекер відвідування індивідуального студента за березень: позначки відвідування та статуси уроків проставлені по черзі, але не всі за одним правилом. Чи коректно заповнений трекер відвідування на такому зображенні?",
+  options:["Так","Ні"], correct:1},
+{section:"Feedback і трекер", type:"single", q:"Де викладач може знайти інформацію щодо роботи з трекером?",
+  options:["За посиланням з онбордингу по трекеру","Написати менеджеру"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"Якою мовою викладач має заповнювати фідбек для студента в трекері?",
+  options:["Англійською","Німецькою","Будь-якою зручною для викладача мовою"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"Фідбек та результати тестування студентів викладач вказує…",
+  options:["в трекері (Feedback)","на платформі (Reviews)","в Excel"], correct:0},
+{section:"Feedback і трекер", type:"single", q:"У якому форматі викладач має вказувати результати (бали) у трекері?",
+  options:["У відсотках","У поінтах"], correct:0},
+{section:"Feedback і трекер", type:"multi", q:"Оберіть правильні варіанти дій, якщо інший вчитель виходить на заміну у вашу групу.",
+  options:["Надіслати вчителю повну інформацію для уроку (матеріали, Zoom)","Встановити самостійно заміну в трекері «Class Management»","Повідомити менеджера проєкту про заміну","Переконатися, що вчитель підтвердив отримання інформації","Передати заміну іншому вчителю без фіксації в системі","Надіслати матеріали після початку уроку"],
+  correct:[0,1,2,3]},
+
+{section:"Обов'язкові вимоги · Autodoc", type:"single", q:"Скільки занять на місяць максимум можна проводити з групою за проєктом Autodoc?",
+  options:["6 занять","8 занять","10 занять"], correct:1},
+{section:"Обов'язкові вимоги · Autodoc", type:"single", q:"Яке обмеження діє щодо кількості занять на місяць для індивідуальних студентів Autodoc?",
+  options:["Не більше 8 занять на місяць, як і для груп","Обмеження по кількості занять на місяць немає — головне дотримуватися погодженої (аппрувнутої) кількості уроків на тиждень, яку повідомляє менеджер","Рівно 4 заняття на місяць"], correct:1},
+
+{section:"Підтримка та звернення", type:"single", q:"До кого потрібно звернутися для підключення курсу на платформі?",
+  options:["Тільки до менеджера проєкту","До будь-якого менеджера"], correct:0},
+{section:"Підтримка та звернення", type:"multi", q:"До кого потрібно звернутися у разі технічної проблеми на платформі?",
+  options:["Написати в групі Telegram Tech problems platform","Повідомити будь-якому менеджеру"], correct:[0,1]},
+{section:"Підтримка та звернення", type:"multi", q:"До кого потрібно звернутися у разі технічної проблеми в трекері?",
+  options:["Повідомити менеджера Олену","Повідомити менеджера Дар'ю","Повідомити менеджера Оксану","Написати в чат групи Telegram BEA Tracker"],
+  correct:[1,2,3]},
+{section:"Підтримка та звернення", type:"text", q:"Будь ласка, напишіть відповідальних менеджерів проєктів, в компаніях яких ви викладаєте.",
+  hint:"Ця відповідь не оцінюється автоматично — її передадуть менеджеру для довідки."}
+];
+
+const praiseOk = ["✅ Правильно! Так тримати.","🎯 Точно в ціль!","👍 Саме так!","✨ Все вірно!"];
+const praiseBad = ["❌ Не зовсім — правильні варіанти позначені зеленим вище.","🤔 Майже! Подивіться на правильну відповідь вище.","📌 Запам'ятайте цей момент — правильна відповідь виділена зеленим."];
+
+/* =========================================================
+   REPORTING — sends each result to your own Vercel API route
+   ========================================================= */
+// Same-origin call, no CORS setup needed. See /api/submit-report.js
+// (deploy alongside this HTML) for the Google Sheets write-up.
+const REPORT_ENDPOINT = "/api/submit-report";
+
+/* =========================================================
+   STATE
+   ========================================================= */
+let currentView = "gate"; // "gate" | "welcome" | "section" | "test" | "results"
+let currentSection = 0;
+let visited = new Set();
+
+let userName = "";
+let userEmail = "";
+
+let currentQ = 0;
+let answers = new Array(quiz.length).fill(null);
+let questionRevealed = new Array(quiz.length).fill(false);
+let orderState = null;
+let reportSaveStatus = "idle"; // "idle" | "saving" | "saved" | "failed"
+
+const main = document.getElementById("main");
+const appRoot = document.getElementById("appRoot");
+
+/* =========================================================
+   GATE — name & email before anything else
+   ========================================================= */
+function renderGateView(){
+  appRoot.classList.add("gate-mode");
+  main.innerHTML = `
+    <div class="gate-card">
+      <div class="logo-badge-big">🎓</div>
+      <h1>Онбординг викладача BEA</h1>
+      <p>Перш ніж почати, вкажіть, будь ласка, ім'я та email — це потрібно, щоб зберегти результат вашого тесту.</p>
+      <div class="gate-field">
+        <label>Ім'я та прізвище</label>
+        <input type="text" id="gateName" placeholder="Напр. Олена Ковальчук" value="${userName}">
+      </div>
+      <div class="gate-field">
+        <label>Email</label>
+        <input type="email" id="gateEmail" placeholder="name@example.com" value="${userEmail}">
+      </div>
+      <div class="gate-error" id="gateError"></div>
+      <button class="btn btn-primary" style="width:100%;" onclick="submitGate()">Продовжити →</button>
+      <p class="gate-note">Дані використовуються лише для того, щоб менеджер міг переглянути ваш результат.</p>
+    </div>
+  `;
+  document.getElementById("gateName").focus();
+}
+
+function submitGate(){
+  const name = document.getElementById("gateName").value.trim();
+  const email = document.getElementById("gateEmail").value.trim();
+  const err = document.getElementById("gateError");
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if(!name){ err.textContent = "Будь ласка, вкажіть ім'я."; return; }
+  if(!emailOk){ err.textContent = "Вкажіть коректний email."; return; }
+  userName = name;
+  userEmail = email;
+  appRoot.classList.remove("gate-mode");
+  currentView = "welcome";
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+/* =========================================================
+   SIDEBAR RENDER
+   ========================================================= */
+function renderSidebar(){
+  const userBadge = document.getElementById("userBadge");
+  if(userBadge){
+    userBadge.innerHTML = userEmail
+      ? `<div class="user-badge"><span class="dot"></span>${userName} · ${userEmail}</div>`
+      : "";
+  }
+  const navList = document.getElementById("navList");
+  navList.innerHTML = sections.map((s,i)=>{
+    const cls = ["nav-item"];
+    if(currentView==="section" && currentSection===i) cls.push("active");
+    if(visited.has(i)) cls.push("done");
+    return `<div class="${cls.join(' ')}" onclick="openSection(${i})">
+      <div class="nav-num">${visited.has(i) ? '<span class="nav-check">✓</span>' : s.emoji}</div>
+      <div class="nav-label">${s.title}</div>
+    </div>`;
+  }).join("");
+
+  const navTest = document.getElementById("navTest");
+  const unlocked = visited.size === sections.length;
+  navTest.classList.toggle("unlocked", unlocked);
+  navTest.classList.toggle("active", currentView==="test" || currentView==="results");
+
+  document.getElementById("progressText").textContent = `Пройдено ${visited.size} з ${sections.length} розділів`;
+  document.getElementById("progressFill").style.width = (visited.size/sections.length*100)+"%";
+}
+
+function goHome(){
+  currentView = "welcome";
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+function openSection(i){
+  currentSection = i;
+  currentView = "section";
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+function goToTest(){
+  if(visited.size < sections.length) return;
+  currentView = "test";
+  currentQ = 0;
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+/* =========================================================
+   MAIN RENDER — WELCOME
+   ========================================================= */
+function renderWelcomeView(){
+  const tilesHtml = sections.map((s,i)=>{
+    const done = visited.has(i);
+    return `<div class="tile" onclick="openSection(${i})">
+      <div class="tile-ic" style="background:${s.color};color:${s.iconColor}">${done?'✓':s.emoji}</div>
+      <div>
+        <div class="tile-num">Розділ ${i+1}</div>
+        <div class="tile-title">${s.title}</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  main.innerHTML = `
+    <div class="hero">
+      <div class="hero-emoji">👋</div>
+      <h1>Привіт! Раді бачити вас у команді BEA</h1>
+      <p>Тут — короткий і дружній онбординг для викладачів: короткі розділи (~15–20 хв. на все) і фінальний тест, щоб переконатися, що робочі процеси вам зрозумілі. Все, що є в тесті, спершу розібрано в розділах — без несподіванок.</p>
+      <button class="btn btn-primary" onclick="openSection(0)">Почати онбординг →</button>
+    </div>
+    <h3 style="margin:0 0 14px;color:var(--bea-blue-deep);font-size:16px;">Що всередині</h3>
+    <div class="tiles">${tilesHtml}</div>
+  `;
+}
+
+/* =========================================================
+   MAIN RENDER — SECTIONS
+   ========================================================= */
+function renderSectionView(){
+  visited.add(currentSection);
+  const s = sections[currentSection];
+  const isLast = currentSection === sections.length-1;
+  main.innerHTML = `
+    <div class="eyebrow">Розділ ${currentSection+1} з ${sections.length}</div>
+    <div class="page-head">
+      <div class="page-icon" style="background:${s.color};">${s.emoji}</div>
+      <div>
+        <h1 class="page-title">${s.title}</h1>
+        <p class="page-lede" style="margin-bottom:0;">${s.lede}</p>
+      </div>
+    </div>
+    <div style="height:20px;"></div>
+    ${s.html}
+    <div class="footer-nav">
+      <button class="btn btn-ghost" ${currentSection===0?'disabled':''} onclick="openSection(${currentSection-1})">← Назад</button>
+      ${isLast
+        ? `<button class="btn btn-primary" onclick="goToTest()">Перейти до тесту →</button>`
+        : `<button class="btn btn-primary" onclick="openSection(${currentSection+1})">Далі →</button>`
+      }
+    </div>
+  `;
+}
+
+/* =========================================================
+   MAIN RENDER — QUIZ
+   ========================================================= */
+function renderTestView(){
+  const q = quiz[currentQ];
+  const pct = Math.round((currentQ)/quiz.length*100);
+  const revealed = questionRevealed[currentQ];
+
+  let bodyHtml = "";
+
+  if(q.type==="single"){
+    bodyHtml = q.options.map((opt,idx)=>{
+      let cls = "opt";
+      const selected = answers[currentQ]===idx;
+      if(selected && !revealed) cls += " selected";
+      if(revealed){
+        if(idx===q.correct) cls += " result-correct";
+        else if(selected) cls += " result-wrong";
+      }
+      return `<div class="${cls}" onclick="${revealed?'':`selectSingle(${idx})`}">
+        <div class="mark">${(selected||(revealed&&idx===q.correct))?'✓':''}</div>
+        <div>${opt}</div>
+      </div>`;
+    }).join("");
+  }
+
+  if(q.type==="multi"){
+    bodyHtml = q.options.map((opt,idx)=>{
+      let cls = "opt multi";
+      const sel = answers[currentQ] || [];
+      const selected = sel.includes(idx);
+      if(selected && !revealed) cls += " selected";
+      if(revealed){
+        const isCorrect = q.correct.includes(idx);
+        if(isCorrect && selected) cls += " result-correct";
+        else if(isCorrect && !selected) cls += " result-missed";
+        else if(!isCorrect && selected) cls += " result-wrong";
+      }
+      return `<div class="${cls}" onclick="${revealed?'':`toggleMulti(${idx})`}">
+        <div class="mark">${selected?'✓':''}</div>
+        <div>${opt}${revealed && isCorrectMissed(cls) ? ' <span style="color:#4CAF50;font-weight:700;font-size:12px;">— правильно, але ви не обрали</span>' : ''}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function isCorrectMissed(cls){ return cls.includes("result-missed"); }
+
+  if(q.type==="order"){
+    if(!orderState || orderState.length!==q.items.length){
+      orderState = answers[currentQ] ? [...answers[currentQ]] : q.items.map(it=>it.id);
+    }
+    bodyHtml = `<p class="quiz-hint" style="margin-top:-4px;">Перетягніть рядки (на комп'ютері) або скористайтеся стрілками ↑↓ (на телефоні).</p><ul class="order-list" id="orderList">` + orderState.map((id,pos)=>{
+      const item = q.items.find(it=>it.id===id);
+      let cls = "order-item";
+      if(revealed){
+        cls += (q.correctOrder[pos]===id) ? " result-correct" : " result-wrong";
+      }
+      return `<li class="${cls}" draggable="${!revealed}" data-id="${id}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dragDrop(event)" ondragend="dragEnd(event)">
+        <span class="handle">⠿</span><span class="pos">${pos+1}</span><span style="flex:1;">${item.text}</span>
+        ${revealed ? '' : `<span class="order-arrows">
+          <button class="order-arrow-btn" ${pos===0?'disabled':''} onclick="moveOrderItem(${pos},-1)" aria-label="Вгору">↑</button>
+          <button class="order-arrow-btn" ${pos===orderState.length-1?'disabled':''} onclick="moveOrderItem(${pos},1)" aria-label="Вниз">↓</button>
+        </span>`}
+      </li>`;
+    }).join("") + `</ul>`;
+  }
+
+  if(q.type==="text"){
+    const val = answers[currentQ] || "";
+    bodyHtml = `<textarea class="quiz-text" id="textAnswer" placeholder="Ваша відповідь…" oninput="answers[${currentQ}]=this.value">${val}</textarea>`;
+  }
+
+  let explainHtml = "";
+  if(revealed && q.type!=="text"){
+    const isRight = isAnswerCorrect(currentQ);
+    const phrase = isRight ? praiseOk[currentQ % praiseOk.length] : praiseBad[currentQ % praiseBad.length];
+    explainHtml = `<div class="explain ${isRight?'ok':'bad'}">${phrase}</div>`;
+  }
+
+  const canCheck = q.type==="text" ? true : hasAnswer(currentQ);
+
+  main.innerHTML = `
+    <div class="eyebrow">📝 Тест на знання робочих процесів</div>
+    <h1 class="page-title" style="margin-bottom:2px;">Питання ${currentQ+1} із ${quiz.length}</h1>
+    <p class="page-lede" style="margin-bottom:20px;">Відповідайте спокійно — після кожного питання ви одразу побачите правильний варіант.</p>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="quiz-progress-label">${pct}%</div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-section-tag">${q.section}</div>
+      <div class="quiz-q">${q.q}</div>
+      ${q.hint ? `<div class="quiz-hint">${q.hint}</div>` : ''}
+      ${bodyHtml}
+      ${explainHtml}
+    </div>
+    <div class="footer-nav">
+      <button class="btn btn-ghost" ${currentQ===0?'disabled':''} onclick="prevQuestion()">← Назад</button>
+      ${revealed || q.type==="text"
+        ? `<button class="btn btn-primary" onclick="nextQuestion()">${currentQ===quiz.length-1?'Завершити тест →':'Наступне питання →'}</button>`
+        : `<button class="btn btn-primary" ${canCheck?'':'disabled'} onclick="checkAnswer()">Перевірити</button>`
+      }
+    </div>
+  `;
+}
+
+function hasAnswer(i){
+  const q = quiz[i];
+  if(q.type==="single") return answers[i]!==null && answers[i]!==undefined;
+  if(q.type==="multi") return answers[i] && answers[i].length>0;
+  if(q.type==="order") return true;
+  return true;
+}
+
+function selectSingle(idx){
+  answers[currentQ] = idx;
+  renderTestView();
+}
+function toggleMulti(idx){
+  if(!answers[currentQ]) answers[currentQ] = [];
+  const arr = answers[currentQ];
+  const pos = arr.indexOf(idx);
+  if(pos>=0) arr.splice(pos,1); else arr.push(idx);
+  renderTestView();
+}
+
+function moveOrderItem(pos, dir){
+  const newPos = pos + dir;
+  if(newPos < 0 || newPos >= orderState.length) return;
+  const tmp = orderState[pos];
+  orderState[pos] = orderState[newPos];
+  orderState[newPos] = tmp;
+  answers[currentQ] = [...orderState];
+  renderTestView();
+}
+
+let dragSrcId = null;
+function dragStart(e){ dragSrcId = e.currentTarget.dataset.id; e.currentTarget.classList.add("dragging"); }
+function dragEnd(e){ e.currentTarget.classList.remove("dragging"); }
+function dragOver(e){ e.preventDefault(); }
+function dragDrop(e){
+  e.preventDefault();
+  const targetId = e.currentTarget.dataset.id;
+  if(targetId===dragSrcId) return;
+  const srcId = parseInt(dragSrcId);
+  const tgtId = parseInt(targetId);
+  const srcIdx = orderState.indexOf(srcId);
+  const tgtIdx = orderState.indexOf(tgtId);
+  orderState.splice(srcIdx,1);
+  orderState.splice(tgtIdx,0,srcId);
+  answers[currentQ] = [...orderState];
+  renderTestView();
+}
+
+function isAnswerCorrect(i){
+  const q = quiz[i];
+  if(q.type==="single") return answers[i]===q.correct;
+  if(q.type==="multi"){
+    const sel = (answers[i]||[]).slice().sort();
+    const cor = q.correct.slice().sort();
+    return JSON.stringify(sel)===JSON.stringify(cor);
+  }
+  if(q.type==="order"){
+    return JSON.stringify(answers[i])===JSON.stringify(q.correctOrder);
+  }
+  return true;
+}
+
+function checkAnswer(){
+  if(quiz[currentQ].type==="order"){
+    answers[currentQ] = [...orderState];
+  }
+  questionRevealed[currentQ] = true;
+  renderTestView();
+}
+
+function nextQuestion(){
+  orderState = null;
+  if(currentQ < quiz.length-1){
+    currentQ++;
+    renderTestView();
+  } else {
+    currentView = "results";
+    renderAll();
+  }
+  window.scrollTo(0,0);
+}
+function prevQuestion(){
+  orderState = null;
+  if(currentQ>0){ currentQ--; renderAll(); window.scrollTo(0,0); }
+}
+
+function buildReportPayload(){
+  const scorable = quiz.map((q,i)=>({q,i})).filter(o=>o.q.type!=="text");
+  let correctCount = 0;
+  scorable.forEach(o=>{ if(isAnswerCorrect(o.i)) correctCount++; });
+  const total = scorable.length;
+  const textAnswer = quiz.findIndex(q=>q.type==="text");
+
+  const details = quiz.map((q,i)=>{
+    let userAnsText = "", correctAnsText = "";
+    if(q.type==="single"){
+      userAnsText = (answers[i]!==null && answers[i]!==undefined) ? q.options[answers[i]] : "—";
+      correctAnsText = q.options[q.correct];
+    } else if(q.type==="multi"){
+      const sel = answers[i]||[];
+      userAnsText = sel.length ? sel.map(idx=>q.options[idx]).join("; ") : "—";
+      correctAnsText = q.correct.map(idx=>q.options[idx]).join("; ");
+    } else if(q.type==="order"){
+      const seq = answers[i]||[];
+      userAnsText = seq.join(" → ");
+      correctAnsText = q.correctOrder.join(" → ");
+    } else if(q.type==="text"){
+      userAnsText = answers[i] || "—";
+      correctAnsText = "";
+    }
+    return {
+      section: q.section, question: q.q, type: q.type,
+      userAnswer: userAnsText, correctAnswer: correctAnsText,
+      isCorrect: q.type==="text" ? null : isAnswerCorrect(i)
+    };
+  });
+
+  return {
+    name: userName,
+    email: userEmail,
+    submittedAt: new Date().toISOString(),
+    score: correctCount,
+    total: total,
+    pct: Math.round(correctCount/total*100),
+    managerNames: textAnswer>=0 ? (answers[textAnswer]||"") : "",
+    details: details
+  };
+}
+
+async function sendReport(){
+  reportSaveStatus = "saving";
+  renderReportStatusOnly();
+  const payload = buildReportPayload();
+  try{
+    const res = await fetch(REPORT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    reportSaveStatus = res.ok ? "saved" : "failed";
+  } catch(err){
+    reportSaveStatus = "failed";
+  }
+  window.__lastReportPayload = payload;
+  renderReportStatusOnly();
+}
+
+function renderReportStatusOnly(){
+  const el = document.getElementById("reportStatusBox");
+  if(el) el.outerHTML = reportStatusHtml();
+}
+
+function reportStatusHtml(){
+  if(reportSaveStatus==="saving"){
+    return `<div class="report-status sending" id="reportStatusBox">⏳ Зберігаємо ваш результат…</div>`;
+  }
+  if(reportSaveStatus==="saved"){
+    return `<div class="report-status sent" id="reportStatusBox">✅ Результат збережено — менеджер його побачить.</div>`;
+  }
+  if(reportSaveStatus==="failed"){
+    return `<div class="report-status failed" id="reportStatusBox">⚠️ Не вдалося автоматично зберегти результат. Натисніть «Скопіювати звіт» і надішліть його менеджеру вручну. <button class="btn btn-ghost" style="padding:6px 14px;font-size:12px;margin-left:8px;" onclick="copyReport()">📋 Скопіювати звіт</button></div>`;
+  }
+  return `<div id="reportStatusBox"></div>`;
+}
+
+function copyReport(){
+  const p = window.__lastReportPayload || buildReportPayload();
+  const lines = [
+    `Онбординг BEA — результат тесту`,
+    `Ім'я: ${p.name}`, `Email: ${p.email}`, `Дата: ${p.submittedAt}`,
+    `Бал: ${p.score}/${p.total} (${p.pct}%)`,
+    `Менеджери проєктів: ${p.managerNames}`,
+    ``, `Деталі:`,
+    ...p.details.map(d=>`[${d.isCorrect===null?'—':(d.isCorrect?'✅':'❌')}] ${d.question} | Відповідь: ${d.userAnswer}${d.correctAnswer?` | Правильно: ${d.correctAnswer}`:''}`)
+  ];
+  const text = lines.join("\n");
+  navigator.clipboard.writeText(text).then(()=>{
+    alert("Звіт скопійовано в буфер обміну — надішліть його менеджеру.");
+  }).catch(()=>{
+    alert("Не вдалося скопіювати автоматично. Відкрийте консоль розробника, там є повний звіт.");
+    console.log(text);
+  });
+}
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
+function renderResultsView(){
+  const scorable = quiz.map((q,i)=>({q,i})).filter(o=>o.q.type!=="text");
+  let correctCount = 0;
+  scorable.forEach(o=>{ if(isAnswerCorrect(o.i)) correctCount++; });
+  const total = scorable.length;
+  const pct = Math.round(correctCount/total*100);
+
+  let msg = "", emoji="";
+  if(pct===100){ msg = "Ідеально! Ви на 100% готові до перших уроків."; emoji="🎉"; }
+  else if(pct>=85){ msg = "Дуже добре — ще трохи повторити слабкі місця."; emoji="👏"; }
+  else if(pct>=60){ msg = "Непогано! Варто повернутися до кількох розділів онбордингу."; emoji="🙂"; }
+  else { msg = "Радимо ще раз пройти розділи онбордингу перед тестом."; emoji="📚"; }
+
+  const reviewHtml = scorable.map(o=>{
+    const right = isAnswerCorrect(o.i);
+    const q = o.q;
+    let userAnsText = "";
+    let correctAnsText = "";
+    if(q.type==="single"){
+      userAnsText = (answers[o.i]!==null && answers[o.i]!==undefined) ? q.options[answers[o.i]] : "—";
+      correctAnsText = q.options[q.correct];
+    } else if(q.type==="multi"){
+      const sel = answers[o.i]||[];
+      userAnsText = sel.length ? sel.map(idx=>q.options[idx]).join("; ") : "—";
+      correctAnsText = q.correct.map(idx=>q.options[idx]).join("; ");
+    } else if(q.type==="order"){
+      const seq = answers[o.i]||[];
+      userAnsText = seq.map(id=>id).join(" → ");
+      correctAnsText = q.correctOrder.join(" → ");
+    }
+    return `<div class="review-item ${right?'right':'wrong'}">
+      <div class="review-q">${right?'✅':'❌'} ${q.q}</div>
+      <div class="review-a"><b>Ваша відповідь:</b> ${userAnsText}</div>
+      ${!right ? `<div class="review-a"><b>Правильна відповідь:</b> ${correctAnsText}</div>` : ''}
+    </div>`;
+  }).join("");
+
+  main.innerHTML = `
+    <div class="eyebrow">🏁 Результат</div>
+    <h1 class="page-title">Тест на знання робочих процесів завершено</h1>
+    ${reportStatusHtml()}
+    <div class="score-hero">
+      <div class="score-emoji">${emoji}</div>
+      <span class="score-num">${correctCount}</span><span class="score-total">/${total}</span>
+      <div class="score-msg">${msg}</div>
+    </div>
+    <h3 style="margin:24px 0 12px;color:var(--bea-blue-deep);">Розбір відповідей</h3>
+    ${reviewHtml}
+    <div class="footer-nav">
+      <button class="btn btn-ghost" onclick="restartTest()">↺ Пройти тест ще раз</button>
+      <button class="btn btn-primary" onclick="goHome()">На головну</button>
+    </div>
+  `;
+
+  if(reportSaveStatus==="idle"){
+    sendReport();
+  }
+}
+
+function restartTest(){
+  answers = new Array(quiz.length).fill(null);
+  questionRevealed = new Array(quiz.length).fill(false);
+  currentQ = 0;
+  reportSaveStatus = "idle";
+  currentView = "test";
+  renderAll();
+  window.scrollTo(0,0);
+}
+
+/* =========================================================
+   ROOT RENDER
+   ========================================================= */
+function renderAll(){
+  if(currentView==="gate"){
+    renderGateView();
+    return;
+  }
+  renderSidebar();
+  if(currentView==="welcome") renderWelcomeView();
+  else if(currentView==="section") renderSectionView();
+  else if(currentView==="test") renderTestView();
+  else renderResultsView();
+}
+
+renderAll();
+</script>
+</body>
+</html>
